@@ -32,7 +32,7 @@ public class PersonalDataExample : MonoBehaviour
    bool StringToBool(string input, out bool output)
     {
         input = input.ToLower();
-        output = true;
+        output = false;
         if (input == "yes" || input == "true" || input == "ja" || input == "1") { output = true; return true; }
         if (input == "no" || input == "false" || input == "nej" || input == "0") { output = false; return true; }
         return false;
@@ -77,7 +77,7 @@ public class PersonalDataExample : MonoBehaviour
                     case 8:
                         bool hasPet;
                         //if (bool.TryParse(fieldContent, out hasPet)) { person.hasPet = hasPet; Debug.Log(hasPet); }
-                        if (StringToBool(fieldContent, out hasPet)) { person.hasPet = hasPet; Debug.Log("has pet: " + person.hasPet); }
+                        if (StringToBool(fieldContent, out hasPet)) { person.hasPet = hasPet;}
                         break;
                     case 9:
                         int cohabitantsCount;
@@ -94,8 +94,6 @@ public class PersonalDataExample : MonoBehaviour
 
                         if (int.TryParse(fieldContent, out siblingsCount)) { person.siblingsCount = siblingsCount; }
                         break;
-
-                        // To do: fix covid relation level fra CECs.
                 }
             }
 
@@ -103,14 +101,18 @@ public class PersonalDataExample : MonoBehaviour
             Person.CovidRelationLevel covidRelationLevel = Person.CovidRelationLevel.None;
             if (fieldContents.Length > 6)
             {
-                bool familyHadCovid = fieldContents[4].ToLower() == "yes";
-                bool familyOrFriendsHadCovid = fieldContents[5].ToLower() == "yes";
-                bool anyoneHadCovid = fieldContents[6].ToLower() == "yes";
+                bool familyHadCovid;
+                StringToBool(fieldContents[4], out familyHadCovid);
+                bool familyOrFriendsHadCovid;
+                StringToBool(fieldContents[5], out familyOrFriendsHadCovid);
+                bool anyoneHadCovid;
+                StringToBool(fieldContents[6], out anyoneHadCovid);
                 if (anyoneHadCovid) covidRelationLevel = Person.CovidRelationLevel.Anyone;
-                else if (familyOrFriendsHadCovid) covidRelationLevel = Person.CovidRelationLevel.FamilyOrFriend;
-                else if (familyOrFriendsHadCovid) covidRelationLevel = Person.CovidRelationLevel.Family;
+                if (familyOrFriendsHadCovid) covidRelationLevel = Person.CovidRelationLevel.FamilyOrFriend;
+                if (familyHadCovid) covidRelationLevel = Person.CovidRelationLevel.Family;
             }
             person.covidRelationLevel = covidRelationLevel;
+            Debug.Log(person.covidRelationLevel);
 
             _people.Add(person);
         }

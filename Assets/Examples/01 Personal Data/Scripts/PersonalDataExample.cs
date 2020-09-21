@@ -76,7 +76,6 @@ public class PersonalDataExample : MonoBehaviour
                         break;
                     case 8:
                         bool hasPet;
-                        //if (bool.TryParse(fieldContent, out hasPet)) { person.hasPet = hasPet; Debug.Log(hasPet); }
                         if (StringToBool(fieldContent, out hasPet)) { person.hasPet = hasPet;}
                         break;
                     case 9:
@@ -102,14 +101,11 @@ public class PersonalDataExample : MonoBehaviour
             if (fieldContents.Length > 6)
             {
                 bool familyHadCovid;
-                StringToBool(fieldContents[4], out familyHadCovid);
                 bool familyOrFriendsHadCovid;
-                StringToBool(fieldContents[5], out familyOrFriendsHadCovid);
                 bool anyoneHadCovid;
-                StringToBool(fieldContents[6], out anyoneHadCovid);
-                if (anyoneHadCovid) covidRelationLevel = Person.CovidRelationLevel.Anyone;
-                if (familyOrFriendsHadCovid) covidRelationLevel = Person.CovidRelationLevel.FamilyOrFriend;
-                if (familyHadCovid) covidRelationLevel = Person.CovidRelationLevel.Family;
+                if (StringToBool(fieldContents[4], out anyoneHadCovid) && anyoneHadCovid) covidRelationLevel = Person.CovidRelationLevel.Anyone;
+                if (StringToBool(fieldContents[5], out familyOrFriendsHadCovid) && familyOrFriendsHadCovid) covidRelationLevel = Person.CovidRelationLevel.FamilyOrFriend;
+                if (StringToBool(fieldContents[6], out familyHadCovid)  && familyHadCovid) covidRelationLevel = Person.CovidRelationLevel.Family;
             }
             person.covidRelationLevel = covidRelationLevel;
             Debug.Log(person.covidRelationLevel);
@@ -121,6 +117,7 @@ public class PersonalDataExample : MonoBehaviour
 
     void Filter()
     {
+        // Filter rows based on age.
         for (int p = _people.Count-1; p >= 0; p--)
         {
             Person person = _people[p];
@@ -138,6 +135,7 @@ public class PersonalDataExample : MonoBehaviour
     {
         _ageMin = int.MaxValue;
         _ageMax = int.MinValue;
+
         foreach (Person person in _people)
         {
             if (person.age > _ageMax)
@@ -150,6 +148,12 @@ public class PersonalDataExample : MonoBehaviour
             }
         }
         Debug.Log("Min: " + _ageMin + ", Max: " + _ageMax);
+
+        /* Other things to do: 
+           - Add average age
+           - Other statistical tests
+           - Something with outliers?
+        */ 
     }
 
     void Represent()
@@ -171,7 +175,7 @@ public class PersonalDataExample : MonoBehaviour
             GameObject barObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
             barObject.transform.SetParent(mainObject.transform);
             barObject.transform.localPosition = Vector3.zero;
-            barObject.transform.localScale = new Vector3(1, height, 1);
+            barObject.transform.localScale = new Vector3(width, height, 1);
         }
     }
 }

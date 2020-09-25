@@ -52,7 +52,7 @@ public class MeshProceduralGridExample : MonoBehaviour
                 triangles[ti] = vi;
                 triangles[ti + 1] = vi + xSize + 1;
                 triangles[ti + 2] = vi + 1;
-                triangles[ti + 3] = vi + 1; // Next triangle begins at same vertex as the previous ended at
+                triangles[ti + 3] = vi + 1; // Next triangle begins at same vertex as the previous ended at.
                 triangles[ti + 4] = vi + xSize + 1; // Triangle's second point is also in the previous triangle.
                 triangles[ti + 5] = vi + xSize + 2;
             }
